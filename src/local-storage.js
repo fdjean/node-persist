@@ -440,7 +440,7 @@ LocalStorage.prototype = {
 
         var self = this;
         var options = this.options;
-        var file = path.join(options.dir, md5(key));
+        var file = path.join(options.dir, key + "_" + md5(key));
 
         var deferred = Q.defer();
         var output = {key: key, value: this.data[key] && this.data[key].value, ttl: this.data[key] && this.data[key].ttl};
@@ -464,7 +464,8 @@ LocalStorage.prototype = {
 
     persistKeySync: function (key) {
         var options = this.options;
-        var file = path.join(options.dir, md5(key));
+        var file = path.join(options.dir, key + "_" + md5(key));
+        console.log(file);
 
         var output = {key: key, value: this.data[key] && this.data[key].value, ttl: this.data[key] && this.data[key].ttl};
         try {
@@ -486,7 +487,8 @@ LocalStorage.prototype = {
         var result;
 
         //check to see if key has been persisted
-        var file = path.join(options.dir, md5(key));
+        var file = path.join(options.dir, key + "_" + md5(key));
+
         fs.exists(file, function (exists) {
             if (exists) {
                 fs.unlink(file, function (err) {
@@ -511,7 +513,7 @@ LocalStorage.prototype = {
 
     removePersistedKeySync: function(key) {
         var options = this.options;
-        var file = path.join(options.dir, md5(key));
+        var file = path.join(options.dir, key + "_" + md5(key));
         if (fs.existsSync(file)) {
             try {
                 fs.unlinkSync(file);
